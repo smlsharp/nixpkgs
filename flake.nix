@@ -36,5 +36,16 @@
         x86_64-linux = packages.x86_64-linux.smlsharp;
         x86_64-darwin = packages.x86_64-darwin.smlsharp;
       };
+      devShells = nixpkgs.lib.genAttrs systems (system: {
+        default = nixpkgs.legacyPackages.${system}.mkShell {
+          packages = with nixpkgs.legacyPackages.${system}; [
+            autoconf
+            git
+            gmp
+            llvm
+            packages.${system}.massivethreads
+          ];
+        };
+      });
     };
 }

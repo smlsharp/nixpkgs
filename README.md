@@ -26,6 +26,22 @@ Include the following in your `flake.nix`:
 }
 ```
 
+## Build Environment
+
+Start a bash shell by
+
+```sh
+nix develop github:smlsharp/nixpkgs
+```
+
+If you'd like to rebuild minismlsharp, install LLVM 7 by the following command:
+
+```sh
+nix build github:nixos/nixpkgs/nixos-23.11#llvm_7.dev -o llvm7
+```
+
+Then, you will find `llvm7-dev` symbolic link in the current directory.
+
 ## License
 
 MIT
