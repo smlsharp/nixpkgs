@@ -22,7 +22,11 @@ stdenv.mkDerivation (finalAttrs: {
     "out"
   ];
 
-  nativeBuildInputs = [ autoconf269 automake116x libtool ];
+  nativeBuildInputs = [
+    autoconf269
+    automake116x
+    libtool
+  ];
 
   preConfigure = ''
     autoreconf -fvi
