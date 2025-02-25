@@ -19,8 +19,7 @@ stdenv.mkDerivation (finalAttrs: {
   };
 
   buildInputs = [
-    binutils
-    gcc
+    stdenv.cc
     gmp
     llvm_19
     massivethreads.out
@@ -37,15 +36,15 @@ stdenv.mkDerivation (finalAttrs: {
   postInstall = ''
     substituteInPlace $out/lib/smlsharp/config.mk \
       --replace-fail 'CC = gcc' \
-                     'CC = ${gcc}/bin/gcc' \
+                     'CC = ${stdenv.cc}/bin/cc' \
       --replace-fail 'CXX = g++' \
-                     'CXX = ${gcc}/bin/g++' \
+                     'CXX = ${stdenv.cc}/bin/c++' \
       --replace-fail 'LD = ld' \
-                     'LD = ${binutils}/bin/ld' \
+                     'LD = ${stdenv.cc}/bin/ld' \
       --replace-fail 'AR = ar' \
-                     'AR = ${binutils}/bin/ar' \
+                     'AR = ${stdenv.cc}/bin/ar' \
       --replace-fail 'RANLIB = ranlib' \
-                     'RANLIB = ${binutils}/bin/ranlib' \
+                     'RANLIB = ${stdenv.cc}/bin/ranlib' \
       --replace-fail 'LDFLAGS =' \
                      'LDFLAGS = -L${gmp}/lib -L${massivethreads.out}/lib'
   '';
