@@ -10,29 +10,31 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
-      packages = nixpkgs.lib.genAttrs systems (
-        system:
-        import ./default.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        }
-      );
+      getPackages =
+        pkgs:
+        let
+          packages = import ./. { inherit pkgs; };
+        in
+        if pkgs.stdenv.hostPlatform.isx86 then
+          packages
+        else
+          {
+            inherit (packages) massivethreads;
+          };
     in
     {
-      packages = {
-        x86_64-linux = rec {
-          inherit (packages.x86_64-linux) massivethreads smlsharp;
-          default = smlsharp;
-        };
-        x86_64-darwin = rec {
-          inherit (packages.x86_64-darwin) massivethreads smlsharp;
-          default = smlsharp;
-        };
-        aarch64-linux = {
-          inherit (packages.aarch64-linux) massivethreads;
-        };
-        aarch64-darwin = {
-          inherit (packages.aarch64-darwin) massivethreads;
-        };
+      packages = nixpkgs.lib.genAttrs systems (
+        system:
+        let
+          packages = getPackages nixpkgs.legacyPackages.${system};
+        in
+        if nixpkgs.lib.hasAttrByPath [ "smlsharp" ] packages then
+          packages // { default = packages.smlsharp; }
+        else
+          packages
+      );
+      overlays = {
+        packages = _: getPackages;
       };
       devShells = nixpkgs.lib.genAttrs systems (system: {
         default = nixpkgs.legacyPackages.${system}.mkShell {
@@ -41,7 +43,7 @@
             git
             gmp
             llvm
-            packages.${system}.massivethreads
+            self.packages.${system}.massivethreads
           ];
         };
       });
