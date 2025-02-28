@@ -12,17 +12,27 @@ nix run github:smlsharp/nixpkgs
 
 ## Using with Flakes
 
-Include the following in your `flake.nix`:
+Include this respository as an input in your `flake.nix` and add overlay
+to include smlsharp into nixpkgs.
+
+For example:
 
 ```nix
 {
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    smlsharp = {
-      url = "github:smlsharp/nixpkgs";
-      inputs.nixpkgs.follows = "nixpkgs";
+  input.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  input.smlsharp.url = "github:smlsharp/nixpkgs";
+  input.smlsharp.inputs.nixpkgs.follows = "nixpkgs";
+  outputs =
+    { self, nixpkgs, smlsharp }:
+    {
+      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          { nixpkgs.overlays = [ smlsharp.overlays.packages ]; }
+          ./configuratrion.nix
+        ];
+      };
     };
-  };
 }
 ```
 

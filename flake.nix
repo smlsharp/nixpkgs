@@ -14,13 +14,9 @@
         pkgs:
         let
           packages = import ./. { inherit pkgs; };
+          inherit (pkgs.hostPlatform) isx86;
         in
-        if pkgs.stdenv.hostPlatform.isx86 then
-          packages
-        else
-          {
-            inherit (packages) massivethreads;
-          };
+        if isx86 then packages else { inherit (packages) massivethreads; };
     in
     {
       packages = nixpkgs.lib.genAttrs systems (
@@ -34,7 +30,7 @@
           packages
       );
       overlays = {
-        packages = _: getPackages;
+        packages = final: prev: getPackages final;
       };
       devShells = nixpkgs.lib.genAttrs systems (system: {
         default = nixpkgs.legacyPackages.${system}.mkShell {
