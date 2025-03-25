@@ -11,11 +11,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "smlsharp";
-  version = "4.1.0";
+  version = "4.2.0";
 
   src = fetchurl {
     url = "https://github.com/smlsharp/smlsharp/releases/download/v${finalAttrs.version}/smlsharp-${finalAttrs.version}.tar.gz";
-    hash = "sha256-sZVDpCZU9L2h1pDG6m5NnuFtx1RLlYKPinxkngkZqKE=";
+    hash = "sha256-kx+1R2LDCrAYyATmadaWUiz6uv4Kb4XK3v7O4e/3ELc=";
   };
 
   buildInputs = [
@@ -62,6 +62,8 @@ stdenv.mkDerivation (finalAttrs: {
     platforms = [
       "x86_64-linux"
       "x86_64-darwin"
+      "aarch64-linux"
+      "aarch64-darwin"
     ];
   };
 })

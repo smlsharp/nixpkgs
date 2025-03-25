@@ -10,38 +10,17 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
-      getPackages =
-        pkgs:
-        let
-          packages = import ./. { inherit pkgs; };
-          inherit (pkgs.hostPlatform) isx86;
-        in
-        if isx86 then packages else { inherit (packages) massivethreads; };
     in
     {
       packages = nixpkgs.lib.genAttrs systems (
         system:
         let
-          packages = getPackages nixpkgs.legacyPackages.${system};
+          packages = import ./. { pkgs = nixpkgs.legacyPackages.${system}; };
         in
-        if nixpkgs.lib.hasAttrByPath [ "smlsharp" ] packages then
-          packages // { default = packages.smlsharp; }
-        else
-          packages
+        packages // { default = packages.smlsharp; }
       );
       overlays = {
-        packages = final: prev: getPackages final;
+        packages = final: prev: import ./. { pkgs = final; };
       };
-      devShells = nixpkgs.lib.genAttrs systems (system: {
-        default = nixpkgs.legacyPackages.${system}.mkShell {
-          packages = with nixpkgs.legacyPackages.${system}; [
-            autoconf
-            git
-            gmp
-            llvm
-            self.packages.${system}.massivethreads
-          ];
-        };
-      });
     };
 }
