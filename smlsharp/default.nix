@@ -26,25 +26,20 @@ stdenv.mkDerivation (finalAttrs: {
     massivethreads.dev
   ];
 
+  preConfigure = ''
+    configureFlagsArray+=(
+      'CC=${stdenv.cc}/bin/cc'
+      'CXX=${stdenv.cc}/bin/c++'
+      'LD=${stdenv.cc}/bin/ld'
+      'AR=${stdenv.cc}/bin/ar'
+      'RANLIB=${stdenv.cc}/bin/ranlib'
+      'LDFLAGS=-L${gmp}/lib -L${massivethreads.out}/lib'
+    )
+  '';
+
   enableParallelBuilding = true;
   preBuild = ''
     make "-j$NIX_BUILD_CORES" SHELL="$SHELL" stage
-  '';
-
-  postInstall = ''
-    substituteInPlace $out/lib/smlsharp/config.mk \
-      --replace-fail 'CC = gcc' \
-                     'CC = ${stdenv.cc}/bin/cc' \
-      --replace-fail 'CXX = g++' \
-                     'CXX = ${stdenv.cc}/bin/c++' \
-      --replace-fail 'LD = ld' \
-                     'LD = ${stdenv.cc}/bin/ld' \
-      --replace-fail 'AR = ar' \
-                     'AR = ${stdenv.cc}/bin/ar' \
-      --replace-fail 'RANLIB = ranlib' \
-                     'RANLIB = ${stdenv.cc}/bin/ranlib' \
-      --replace-fail 'LDFLAGS =' \
-                     'LDFLAGS = -L${gmp}/lib -L${massivethreads.out}/lib'
   '';
 
   meta = with lib; {
