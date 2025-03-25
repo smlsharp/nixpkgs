@@ -2,8 +2,6 @@
   stdenv,
   fetchurl,
   lib,
-  binutils,
-  gcc,
   gmp,
   llvm_20,
   massivethreads,
