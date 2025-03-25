@@ -5,7 +5,7 @@
   binutils,
   gcc,
   gmp,
-  llvm_19,
+  llvm_20,
   massivethreads,
 }:
 
@@ -21,7 +21,7 @@ stdenv.mkDerivation (finalAttrs: {
   buildInputs = [
     stdenv.cc
     gmp
-    llvm_19
+    llvm_20
     massivethreads.out
   ];
   nativeBuildInputs = [
