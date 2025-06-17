@@ -19,9 +19,9 @@ For example:
 
 ```nix
 {
-  input.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  input.smlsharp.url = "github:smlsharp/nixpkgs";
-  input.smlsharp.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs.smlsharp.url = "github:smlsharp/nixpkgs";
+  inputs.smlsharp.inputs.nixpkgs.follows = "nixpkgs";
   outputs =
     { self, nixpkgs, smlsharp }:
     {
