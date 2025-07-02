@@ -10,17 +10,14 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
+      pkgs = system: import ./. { pkgs = nixpkgs.legacyPackages.${system}; };
+      packages = nixpkgs.lib.genAttrs systems pkgs;
+      addDefault = k: packages: packages // { default = packages.${k}; };
     in
     {
-      packages = nixpkgs.lib.genAttrs systems (
-        system:
-        let
-          packages = import ./. { pkgs = nixpkgs.legacyPackages.${system}; };
-        in
-        packages // { default = packages.smlsharp; }
-      );
+      packages = nixpkgs.lib.mapAttrs (_: addDefault "smlsharp") packages;
       overlays = {
-        packages = final: prev: import ./. { pkgs = final; };
+        packages = final: prev: pkgs final.system;
       };
     };
 }
