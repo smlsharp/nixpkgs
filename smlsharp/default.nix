@@ -58,5 +58,6 @@ stdenv.mkDerivation (finalAttrs: {
       "aarch64-linux"
       "aarch64-darwin"
     ];
+    broken = stdenv.hostPlatform.isAarch64 && stdenv.hostPlatform.isLinux;
   };
 })
